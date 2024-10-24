@@ -1,0 +1,34 @@
+name: CI/CD for Calculator
+
+on:
+  push:
+    branches:
+      - main  # Change this if your main branch has a different name
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Validate HTML, CSS, and JavaScript
+        run: |
+          # Install HTMLHint and CSSLint
+          npm install -g htmlhint csslint
+
+          # Validate HTML
+          htmlhint ./**/*.html
+          
+          # Validate CSS
+          csslint ./**/*.css
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .  # Adjust if your files are in a subdirectory
